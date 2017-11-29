@@ -1,16 +1,12 @@
 class Vertex(object):
 
-    def __init__(self, name, names_of_connections):
+    def __init__(self, name):
         self.name = name
-        self.names_of_connections = names_of_connections
         self.state = 'not visited'
         self.weight = 10000000000000
 
     def get_name(self):
         return self.name
-
-    def get_connections(self):
-        return self.names_of_connections
 
     def get_state(self):
         return self.state
