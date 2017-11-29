@@ -4,6 +4,7 @@ class Vertex(object):
         self.name = name
         self.names_of_connections = names_of_connections
         self.state = 'not visited'
+        self.weight = 10000000000000
 
     def get_name(self):
         return self.name
@@ -13,6 +14,12 @@ class Vertex(object):
 
     def get_state(self):
         return self.state
+
+    def get_weight(self):
+        return self.weight
+
+    def set_weight(self, newWeight):
+        self.weight = newWeight
 
     def set_state_not_visited(self):
         self.state = 'not visited'
