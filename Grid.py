@@ -46,7 +46,7 @@ class RandomGraph(Grid):
            loc1 = random.randint(0, len(self.list_of_vertices)-1)
            loc2 = random.randint(0, len(self.list_of_vertices)-1)
 
-           if not self.does_connection_exist(loc1, loc2):
+           if not self.does_connection_exist(loc1, loc2) and not loc1 == loc2:
                return loc1, loc2
            else:
                return generate_random_connection():
