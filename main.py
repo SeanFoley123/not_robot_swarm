@@ -16,7 +16,7 @@ class Main(object):
         while not all([True if robot.state == "standby" else False for robot in self.swarm.swarm]):
             self.swarm.update()
 
-        print self.swarm.map
+        print(self.swarm.map)
 
 
 

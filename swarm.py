@@ -1,6 +1,5 @@
 
 from robot import Robot
-from sets import Set
 
 class Swarm(object):
 
@@ -9,7 +8,7 @@ class Swarm(object):
         self.swarm = [Robot() for i in range(n)]
         self.map = {}
         self.efficiency = {}
-        self.unknown_territory = Set()
+        self.unknown_territory = set()
 
 
     def startup_sequence(self, node):
@@ -28,25 +27,20 @@ class Swarm(object):
 
 
     def command_robot(self, robot):
-        if robot.state == "normal":
-            original, move, neighbors = robot.move()
-            if neighbors:
-                self.unknown_territory.update(neighbors)
+        original, move, neighbors = robot.move()
+        if neighbors:
+            self.unknown_territory.update(neighbors)
+        try:
+            self.efficiency[move] += 1
+        except KeyError:
+            self.efficiency[move] = 1
+        if original:
             try:
-                self.efficiency[move] += 1
+                self.map[original.name].update([node.name for node in neighbors])
             except KeyError:
-                self.efficiency[move] = 1
-            if original:
-                try:
-                    self.map[original.name].update([node.name for node in neighbors])
-                except KeyError:
-                    self.map[original.name] = Set()
-                    self.map[original.name].update([node.name for node in neighbors])
-        elif robot.state == "rebalance":
-            robot.rebalance()
-        else:
-            pass
-
+                self.map[original.name] = set()
+                self.map[original.name].update([node.name for node in neighbors])
+                
 
     def waypoint_navigation(self, robot):
         waypoint = self.choose_waypoint()

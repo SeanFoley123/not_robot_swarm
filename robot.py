@@ -6,8 +6,8 @@ class Robot(object):
     def __init__(self):
         self.current = None
         self.memory = []
-        self.state = "normal"
         self.path = []
+        self.state = "normal"
 
 
     def start(self, starting_node):
@@ -16,47 +16,37 @@ class Robot(object):
 
 
     def move(self):
-        neighborhood, valid_neighbors = self.find_next_move()
-        if valid_neighbors:
-            next_move = np.random.choice(valid_neighbors)
-            move_from, move_to = self.make_move(next_move)
-        else:
-            move_from, move_to = self.retrace()
+        original = self.current
+        original_neighbors = self.current.neighbors
 
-        return move_from, move_to, neighborhood
+        if self.state == "normal":
+            unexplored = [node for node in original_neighbors if node.state == "red"]
+            if not unexplored:
+                self.current.state = "green"
+                next_state = self.memory.pop()
+                if self.distance == 0:
+                    self.state = "standby"
 
+            elif len(unexplored) == 1:
+                self.current.state = "green"
+                next_state = unexplored[0]
+                self.memory.append(next_state)
 
-    def rebalance(self):
-        next_move = self.path.pop()
-        prev = self.current
-        self.current = next_move
-        self.memory.append(prev)
-        if not self.path:
-            self.state = "normal"
+            else:
+                self.current.state = "yellow"
+                next_state = np.random.choice(unexplored)
+                self.memory.append(next_state)
 
+        elif self.state == "rebalancing":
+            next_state = self.path.pop()
+            self.memory.append(next_state)
+            if not self.path:
+                self.state = "normal"
 
-    def retrace(self):
-        last_move = self.memory.pop()
-        self.current.state = "green"
-        self.current = last_move
-        if not self.memory:
-            self.state = "standby"
-        return None, last_move
+        self.current = next_state
+        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight
 
-    def make_move(self, next_move):
-        prev = self.current
-        self.current.state = "yellow"
-        self.current = next_move
-        current_weight = self.current.weight
-        self.current.weight = self.distance if self.distance < current_weight else current_weight
-        self.memory.append(prev)
-        return prev, self.current
-
-
-    def find_next_move(self):
-        neighbors = self.current.neighbors
-        unexplored = [node for node in neighbors if node.state == "red"]
-        return (neighbors, unexplored) if unexplored else (neighbors, None)
+        return original, self.current, original_neighbors
 
 
     @property

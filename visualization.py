@@ -4,6 +4,7 @@ from pygame.locals import *
 from math import sqrt
 from Vertex import Vertex
 from Grid import CompleteGraph, RandomGraph
+from swarm import Swarm
 
 def main():
 	pygame.init()
@@ -20,34 +21,48 @@ def main():
 	background = pygame.Surface((sizex, sizey))
 	background.fill(background_color)
 
-	complete = RandomGraph(10)
+	grid = CompleteGraph(10)
+	swarm = Swarm(3)
+	swarm.startup_sequence(grid.list_of_vertices[0])
 	# vertex_set = {1: [2, 3, 4], 2: [1, 4], 3: [1], 4: [1, 2], 5: [1, 2], 6: [5, 6], 8:[], 9:[], 10:[]}
 	
-	vertex_coords = dict()
 	margin = 100
-	spacing = int((sizex - 2*margin)/sqrt(len(complete.list_of_vertices)))
+	spacing = int((sizex - 2*margin)/sqrt(len(grid.list_of_vertices)))
 	x = 0
 	y = 0
 
-	for vertex in complete.list_of_vertices:
-		pygame.draw.circle(background, vertex_color, (x + margin, y + margin), 5)
-		vertex_coords[vertex] = (x + margin, y + margin)
+	for vertex in grid.list_of_vertices:
+		vertex.coords = (x + margin, y + margin)
 		x += spacing
 		if x >= sizex - margin:
 			x = 0
 			y += spacing
-		
-	for start_vertex in complete.list_of_vertices:
-		for end_vertex in vertex.names_of_connections:
-			pygame.draw.line(background, vertex_color, vertex_coords[start_vertex], vertex_coords[end_vertex])
+
+	state_to_color_mapping = {'red': pygame.Color('red'), 'yellow': pygame.Color('yellow'), 'green': pygame.Color('green')}
 
 	while True:
-		clock.tick(60)
+		clock.tick(2)
+		if not all([True if robot.state == "standby" else False for robot in swarm.swarm]):
+			swarm.update()
+
+			background.fill(background_color)
+		
+			for start_vertex in grid.list_of_vertices:
+				pygame.draw.circle(background, state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
+				if any(robot.current == start_vertex for robot in swarm.swarm):
+					pygame.draw.circle(background, vertex_color, start_vertex.coords, 15, 3)
+				print(start_vertex.name + ": " + start_vertex.state)
+				for end_vertex in start_vertex.neighbors:
+					pygame.draw.line(background, vertex_color, start_vertex.coords, end_vertex.coords)
+
+			print("")
+		
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
+
 		screen.blit(background, (0,0))
-		pygame.display.flip()
+		pygame.display.update()
 
 if __name__ == '__main__': main()
