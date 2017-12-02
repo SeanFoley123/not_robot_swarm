@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from math import sqrt
 from Vertex import Vertex
-from Grid import CompleteGraph
+from Grid import CompleteGraph, RandomGraph
 
 def main():
 	pygame.init()
@@ -20,7 +20,7 @@ def main():
 	background = pygame.Surface((sizex, sizey))
 	background.fill(background_color)
 
-	complete = CompleteGraph(18)
+	complete = RandomGraph(10)
 	# vertex_set = {1: [2, 3, 4], 2: [1, 4], 3: [1], 4: [1, 2], 5: [1, 2], 6: [5, 6], 8:[], 9:[], 10:[]}
 	
 	vertex_coords = dict()

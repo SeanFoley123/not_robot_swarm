@@ -6,7 +6,6 @@ class Robot(object):
     def __init__(self):
         self.current = None
         self.memory = []
-        self.distance = 0
         self.state = "normal"
         self.path = []
 
@@ -31,7 +30,6 @@ class Robot(object):
         next_move = self.path.pop()
         prev = self.current
         self.current = next_move
-        self.distance += 1
         self.memory.append(prev)
         if not self.path:
             self.state = "normal"
@@ -41,7 +39,6 @@ class Robot(object):
         last_move = self.memory.pop()
         self.current.state = "green"
         self.current = last_move
-        self.distance -= 1
         if not self.memory:
             self.state = "standby"
         return None, last_move
@@ -50,7 +47,6 @@ class Robot(object):
         prev = self.current
         self.current.state = "yellow"
         self.current = next_move
-        self.distance += 1
         current_weight = self.current.weight
         self.current.weight = self.distance if self.distance < current_weight else current_weight
         self.memory.append(prev)
@@ -63,5 +59,7 @@ class Robot(object):
         return (neighbors, unexplored) if unexplored else (neighbors, None)
 
 
-    def get_position(self):
-        return self.current
+    @property
+    def distance(self):
+        # The current distance from the hive (in the path we took, not necessarily the shortest)
+        return len(self.memory) - 1

@@ -16,6 +16,7 @@ class Swarm(object):
         self.hive = node
         for robot in self.swarm:
             robot.start(node)
+            self.command_robot(robot)
 
 
     def update(self):
