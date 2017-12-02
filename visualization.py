@@ -20,7 +20,7 @@ def main():
 	background = pygame.Surface((sizex, sizey))
 	background.fill(background_color)
 
-	complete = CompleteGraph(100)
+	complete = CompleteGraph(18)
 	# vertex_set = {1: [2, 3, 4], 2: [1, 4], 3: [1], 4: [1, 2], 5: [1, 2], 6: [5, 6], 8:[], 9:[], 10:[]}
 	
 	vertex_coords = dict()
