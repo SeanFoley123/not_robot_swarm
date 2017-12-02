@@ -22,11 +22,11 @@ class RandomGraph(Grid):
         super().__init__()
 
         self.list_of_vertices = [Vertex(name='v'+str(i)) for i in range(num)]
-
+        for i in range(len(self.list_of_vertices)):
+            self.list_of_vertices[i].names_of_connections = []
         self.generate_connections()
 
     def generate_connections(self):
-        
         def get_max_connections(num):
             if not num == 1:
                 return num - 1 + get_max_connections(num-1)
@@ -49,7 +49,8 @@ class RandomGraph(Grid):
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
-            self.list_of_vertices[loc1].append('v'+str(loc2))
+            self.list_of_vertices[loc1].names_of_connections.append(self.list_of_vertices[loc2])
+            self.list_of_vertices[loc2].names_of_connections.append(self.list_of_vertices[loc1])
 
 
     def does_connection_exist(self, loc1, loc2):
