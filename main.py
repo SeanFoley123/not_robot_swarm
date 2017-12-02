@@ -1,8 +1,5 @@
-
 from Grid import *
 from swarm import Swarm
-
-
 
 class Main(object):
 
@@ -17,8 +14,6 @@ class Main(object):
             self.swarm.update()
 
         print(self.swarm.map)
-
-
 
 
 if __name__=="__main__":

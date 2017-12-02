@@ -6,26 +6,14 @@ from Vertex import Vertex
 from Grid import CompleteGraph, RandomGraph
 from swarm import Swarm
 
-def main():
-	pygame.init()
-	pygame.display.set_caption('Graph Exploration')
-	clock = pygame.time.Clock()
-	
-	sizex = 700
-	sizey = 700
-	background_color = (227, 232, 239)
-	vertex_color = (83, 87, 94)
-	edge_color = (83, 87, 94)
+sizex = 700
+sizey = 700
+background_color = (227, 232, 239)
+robot_color = (83, 87, 94)
+edge_color = (83, 87, 94)
+state_to_color_mapping = {'red': pygame.Color('red'), 'yellow': pygame.Color('yellow'), 'green': pygame.Color('green')}
 
-	screen = pygame.display.set_mode((sizex, sizey))
-	background = pygame.Surface((sizex, sizey))
-	background.fill(background_color)
-
-	grid = CompleteGraph(10)
-	swarm = Swarm(3)
-	swarm.startup_sequence(grid.list_of_vertices[0])
-	# vertex_set = {1: [2, 3, 4], 2: [1, 4], 3: [1], 4: [1, 2], 5: [1, 2], 6: [5, 6], 8:[], 9:[], 10:[]}
-	
+def space_out_vertices(grid):
 	margin = 100
 	spacing = int((sizex - 2*margin)/sqrt(len(grid.list_of_vertices)))
 	x = 0
@@ -38,24 +26,44 @@ def main():
 			x = 0
 			y += spacing
 
-	state_to_color_mapping = {'red': pygame.Color('red'), 'yellow': pygame.Color('yellow'), 'green': pygame.Color('green')}
+
+def draw_robots(background, grid, swarm):
+	for start_vertex in grid.list_of_vertices:
+		pygame.draw.circle(background, state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
+		if any(robot.current == start_vertex for robot in swarm.swarm):
+			# print(start_vertex.name)
+			pygame.draw.circle(background, robot_color, start_vertex.coords, 15, 3)
+		# print(start_vertex.name + ": " + start_vertex.state)
+		for end_vertex in start_vertex.neighbors:
+			pygame.draw.line(background, edge_color, start_vertex.coords, end_vertex.coords)
+
+	# print("")
+
+
+def main():
+	pygame.init()
+	pygame.display.set_caption('Graph Exploration')
+	clock = pygame.time.Clock()
+
+	grid = CompleteGraph(10)
+	space_out_vertices(grid)
+	swarm = Swarm(3)
+	swarm.startup_sequence(grid.list_of_vertices[0])
+
+	screen = pygame.display.set_mode((sizex, sizey))
+	background = pygame.Surface((sizex, sizey))
+
+	background.fill(background_color)
+	draw_robots(background, grid, swarm)
+	screen.blit(background, (0,0))
+	pygame.display.update()
 
 	while True:
 		clock.tick(2)
 		if not all([True if robot.state == "standby" else False for robot in swarm.swarm]):
 			swarm.update()
-
 			background.fill(background_color)
-		
-			for start_vertex in grid.list_of_vertices:
-				pygame.draw.circle(background, state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
-				if any(robot.current == start_vertex for robot in swarm.swarm):
-					pygame.draw.circle(background, vertex_color, start_vertex.coords, 15, 3)
-				print(start_vertex.name + ": " + start_vertex.state)
-				for end_vertex in start_vertex.neighbors:
-					pygame.draw.line(background, vertex_color, start_vertex.coords, end_vertex.coords)
-
-			print("")
+			draw_robots(background, grid, swarm)
 		
 		for event in pygame.event.get():
 			if event.type == QUIT:

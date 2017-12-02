@@ -15,19 +15,20 @@ class Swarm(object):
         self.hive = node
         for robot in self.swarm:
             robot.start(node)
-            self.command_robot(robot)
 
 
     def update(self):
         for robot in self.swarm:
+            print(robot.current.name + ", " + robot.state)
             if robot.state != "standby":
                 self.command_robot(robot)
             else:
                 self.waypoint_navigation(robot)
+        print('')
 
 
     def command_robot(self, robot):
-        original, move, neighbors = robot.move()
+        original, neighbors, move = robot.move()
         if neighbors:
             self.unknown_territory.update(neighbors)
         try:
@@ -40,7 +41,7 @@ class Swarm(object):
             except KeyError:
                 self.map[original.name] = set()
                 self.map[original.name].update([node.name for node in neighbors])
-                
+
 
     def waypoint_navigation(self, robot):
         waypoint = self.choose_waypoint()
