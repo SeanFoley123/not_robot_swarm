@@ -40,15 +40,13 @@ class Swarm(object):
                     self.map[original].update(neigbors)
                 except KeyError:
                     self.map[original] = Set()
-        else:
-            robot.rebalance()
 
 
     def waypoint_navigation(self, robot):
         waypoint = self.choose_waypoint()
-        path = self.find_path(waypoint)
+        rebalancing_path = self.find_path(waypoint)
         robot.rebalancing = True
-        robot.path = path
+        robot.rebalancing_path = rebalancing_path
 
 
     def find_path(self, node):

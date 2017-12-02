@@ -6,7 +6,8 @@ class Robot(object):
     def __init_(self):
         self.current = None
         self.rebalancing = False
-        self.path = []
+        self.path = [] #the path you have followed to get to this point
+        self.rebalancing_path = [] #a path given to you by the swarm
 
 
     def start(self, starting_node):
@@ -16,31 +17,36 @@ class Robot(object):
 
 
     def move(self):
-        unexplored = [node for node in self.current.neighbors if node.state == "red"]
-        if not neighbors:
-            self.current.state = "green"
-            next_state = self.path.pop()
+        original = self.current
+        original_neighbors = self.current.neighbors
 
-        elif len(neighbors) == 1:
-            self.current.state = "green"
-            next_state = neighbors[0]
-            self.path.append(next_state)
+        if not self.rebalancing:
+            unexplored = [node for node in original_neighbors if node.state == "red"]
+            if not unexplored:
+                self.current.state = "green"
+                next_state = self.path.pop()
+
+            elif len(unexplored) == 1:
+                self.current.state = "green"
+                next_state = unexplored[0]
+                self.path.append(next_state)
+
+            else:
+                self.current.state = "yellow"
+                next_state = np.random.choice(unexplored)
+                self.path.append(next_state)
 
         else:
-            self.current.state = "yellow"
-            next_state = np.random.choice(neighbors)
+            next_state = self.rebalancing_path.pop()
             self.path.append(next_state)
+            if not self.rebalancing_path:
+                self.rebalancing = False
+                self.rebalancing_path = []
 
         self.current = next_state
         self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight
 
-    
-    def rebalance(self):
-        next_move = self.path.pop()
-        self.current = next_move
-        distance += 1
-        if not self.path:
-            self.rebalancing = False
+        return original, self.current, original_neighbors
 
 
     @property
