@@ -16,11 +16,12 @@ class Swarm(object):
         self.hive = node
         for robot in self.swarm:
             robot.start(node)
+            self.command_robot(robot)
 
 
     def update(self):
         for robot in self.swarm:
-            if robot.memory:
+            if robot.distance != 0:
                 self.command_robot(robot)
             else:
                 self.waypoint_navigation(robot)

@@ -5,8 +5,6 @@ class Robot(object):
 
     def __init_(self):
         self.current = None
-        self.memory = []
-        self.distance = 0
         self.rebalancing = False
         self.path = []
 
@@ -14,18 +12,27 @@ class Robot(object):
     def start(self, starting_node):
         self.current = starting_node
         self.current.weight = 0
-        self.memory.append(self.current)
+        self.path.append(self.current)
 
 
     def move(self):
-        neighbors = self.find_next_move()
-        if neighbors:
-            next_move = np.random.choice(neighbors)
-            move_from, move_to = self.make_move(next_move)
-        else:
-            move_from, move_to = self.retrace()
+        unexplored = [node for node in self.current.neighbors if node.state == "red"]
+        if not neighbors:
+            self.current.state = "green"
+            next_state = self.path.pop()
 
-        return move_from, move_to, neighbors
+        elif len(neighbors) == 1:
+            self.current.state = "green"
+            next_state = neighbors[0]
+            self.path.append(next_state)
+
+        else:
+            self.current.state = "yellow"
+            next_state = np.random.choice(neighbors)
+            self.path.append(next_state)
+
+        self.current = next_state
+        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight
 
     
     def rebalance(self):
@@ -36,29 +43,7 @@ class Robot(object):
             self.rebalancing = False
 
 
-    def retrace(self):
-        last_move = self.memory.pop()
-        self.current.state = "green"
-        self.current = last_move
-        distance -= 1
-        return None, last_move
-
-    def make_move(self, next_move):
-        prev = self.current
-        self.current.state = "yellow"
-        self.current = next_move
-        distance += 1
-        current_weight = self.current.weight
-        self.current.weight = distance if distance < current_weight else current_weight
-        self.memory.append(self.current)
-        return prev, self.current
-
-
-    def find_next_move(self):
-        neigbors = self.current.getNeighbors()
-        unexplored = [node for node in neighbors if node.state != "green"]
-        return unexplored if unexplored else None
-
-
-    def get_position(self):
-        return self.current
+    @property
+    def distance(self):
+        # The current distance from the hive (in the path we took, not necessarily the shortest)
+        return len(self.path) - 1
