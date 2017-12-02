@@ -1,5 +1,7 @@
 from Vertex import *
+import numpy as np
 import random
+
 class Grid(object):
 
     def __init__(self):
@@ -34,8 +36,8 @@ class RandomGraph(Grid):
                 return 0
 
         def generate_random_connection():
-           loc1 = random.randint(0, len(self.list_of_vertices)-1)
-           loc2 = random.randint(0, len(self.list_of_vertices)-1)
+           loc1 = np.random.choice(self.list_of_vertices)
+           loc2 = np.random.choice(self.list_of_vertices)
 
            if not self.does_connection_exist(loc1, loc2) and not loc1 == loc2:
                return loc1, loc2
@@ -49,12 +51,9 @@ class RandomGraph(Grid):
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
-            self.list_of_vertices[loc1].names_of_connections.append(self.list_of_vertices[loc2])
-            self.list_of_vertices[loc2].names_of_connections.append(self.list_of_vertices[loc1])
+            loc1.names_of_connections.append(loc2)
+            loc2.names_of_connections.append(loc1)
 
 
     def does_connection_exist(self, loc1, loc2):
-        for i in self.list_of_vertices[loc1].names_of_connections:
-            if int(i[1::]) == loc2:
-                    return True
-        return False
+        return loc2 in loc1.names_of_connections
