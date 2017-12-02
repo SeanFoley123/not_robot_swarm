@@ -20,34 +20,39 @@ class Swarm(object):
 
     def update(self):
         for robot in self.swarm:
-            if robot.memory:
+            if robot.state != "standby":
                 self.command_robot(robot)
             else:
                 self.waypoint_navigation(robot)
 
 
     def command_robot(self, robot):
-        if not robot.rebalancing:
+        if robot.state == "normal":
             original, move, neighbors = robot.move()
-            self.unknown_territory.update(neighbors)
+            if neighbors:
+                self.unknown_territory.update(neighbors)
             try:
                 self.efficiency[move] += 1
             except KeyError:
                 self.efficiency[move] = 1
             if original:
                 try:
-                    self.map[original].update(neigbors)
+                    self.map[original.name].update([node.name for node in neighbors])
                 except KeyError:
-                    self.map[original] = Set()
-        else:
+                    self.map[original.name] = Set()
+                    self.map[original.name].update([node.name for node in neighbors])
+        elif robot.state == "rebalance":
             robot.rebalance()
+        else:
+            pass
 
 
     def waypoint_navigation(self, robot):
         waypoint = self.choose_waypoint()
-        path = self.find_path(waypoint)
-        robot.rebalancing = True
-        robot.path = path
+        if waypoint:
+            path = self.find_path(waypoint)
+            robot.state = "rebalance"
+            robot.path = path
 
 
     def find_path(self, node):
@@ -62,10 +67,11 @@ class Swarm(object):
 
 
     def choose_waypoint(self):
-        unexplored_area = [area for area in self.unknown_territory if area.state != "green"]
-        waypoint = unexplored_area[0]
-        for node in unexplored_area:
-            if node.weight < waypoint.weight:
-                waypoint = node.weight
+        unexplored_area = [area for area in self.unknown_territory if area.state == "red"]
+        if unexplored_area:
+            waypoint = unexplored_area[0]
+            for node in unexplored_area:
+                if node.weight < waypoint.weight:
+                    waypoint = node.weight
 
-        return waypoint
+            return waypoint

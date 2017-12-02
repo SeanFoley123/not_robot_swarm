@@ -1,9 +1,13 @@
+
+import numpy as np
+
 class Vertex(object):
 
     def __init__(self, name):
         self.name = name
-        self.state = 'not visited'
-        self.weight = 10000000000000
+        self.state = 'red'
+        self.weight = np.inf
+        self.neighbors = []
 
     def get_name(self):
         return self.name
@@ -18,10 +22,10 @@ class Vertex(object):
         self.weight = newWeight
 
     def set_state_not_visited(self):
-        self.state = 'not visited'
+        self.state = 'red'
 
     def set_state_incomplete(self):
-        self.state = 'incomplete'
+        self.state = 'yellow'
 
     def set_state_complete(self):
-        self.state = 'complete'
+        self.state = 'green'
