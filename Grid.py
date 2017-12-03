@@ -20,15 +20,16 @@ class CompleteGraph(Grid):
 
 
 class RandomGraph(Grid):
-    def __init__(self, num):
+    def __init__(self, num, sparseness = .5):
+        # sparseness ranges from 0 to 1, with .5 being an average graph
         super().__init__()
 
         self.list_of_vertices = [Vertex(name='v'+str(i)) for i in range(num)]
         for i in range(len(self.list_of_vertices)):
             self.list_of_vertices[i].neighbors = []
-        self.generate_connections()
+        self.generate_connections(sparseness)
 
-    def generate_connections(self):
+    def generate_connections(self, sparseness):
         def get_max_connections(num):
             if not num == 1:
                 return num - 1 + get_max_connections(num-1)
@@ -39,21 +40,19 @@ class RandomGraph(Grid):
            loc1 = np.random.choice(self.list_of_vertices)
            loc2 = np.random.choice(self.list_of_vertices)
 
-           if not self.does_connection_exist(loc1, loc2) and not loc1 == loc2:
+           if not loc1 in loc2.neighbors and not loc1 == loc2:
                return loc1, loc2
            else:
                return generate_random_connection()
 
-        min_connections = 2*len(self.list_of_vertices) - 5
         max_connections = get_max_connections(len(self.list_of_vertices))
-
-        num_of_connections = random.randint(min_connections, max_connections)
+        # get gaussian distribution with mean skewed by sparseness
+        num_of_connections = -1
+        while (len(self.list_of_vertices) > num_of_connections or num_of_connections > max_connections):
+            num_of_connections = int(max_connections*sparseness + max_connections/6*np.random.randn())
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
             loc1.neighbors.append(loc2)
             loc2.neighbors.append(loc1)
 
-
-    def does_connection_exist(self, loc1, loc2):
-        return loc2 in loc1.neighbors

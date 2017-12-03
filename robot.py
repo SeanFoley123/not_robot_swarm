@@ -10,24 +10,22 @@ class Robot(object):
         self.state = "normal"
 
 
-    def start(self, starting_node):
-        self.current = starting_node
+    def start(self, starting_vertex):
+        self.current = starting_vertex
         self.current.weight = 0
         self.memory.append(self.current)
 
 
     def move(self):
-        yield self.current           #returning the starting vertex
+        yield self.current            #returning the starting vertex
         yield self.current.neighbors           #returning the original neighbors
 
         if self.state == "normal":
-            unexplored = [node for node in self.current.neighbors if node.state == "red"]
-            if not unexplored:
-                print("reversing: " + str([vertex.name for vertex in self.memory]))
+            unexplored = [vertex for vertex in self.current.neighbors if vertex.state == "red"]
+            if not unexplored:              # if there is an adjacent untouched vertex
                 self.current.state = "green"
                 next_state = self.memory.pop()
                 if self.distance == 0:
-                    print("done")
                     self.state = "standby"
 
             else:

@@ -11,36 +11,35 @@ class Swarm(object):
         self.unknown_territory = set()
 
 
-    def startup_sequence(self, node):
-        self.hive = node
+    def startup_sequence(self, vertex):
+        self.hive = vertex
         for robot in self.swarm:
-            robot.start(node)
+            robot.start(self.hive)
 
 
     def update(self):
         for robot in self.swarm:
-            print(robot.current.name + ", " + robot.state)
             if robot.state != "standby":
-                self.command_robot(robot)
-            else:
-                self.waypoint_navigation(robot)
-        print('')
+                self.command_robot(robot)           #have the robot move around like normal
+            # else:                                 #currently broken
+            #     self.waypoint_navigation(robot)     #have the robot move to the nearest red spot
 
 
     def command_robot(self, robot):
         original, neighbors, move = robot.move()
         if neighbors:
             self.unknown_territory.update(neighbors)
+        
         try:
             self.efficiency[move] += 1
         except KeyError:
             self.efficiency[move] = 1
-        if original:
-            try:
-                self.map[original.name].update([node.name for node in neighbors])
-            except KeyError:
-                self.map[original.name] = set()
-                self.map[original.name].update([node.name for node in neighbors])
+        
+        try:
+            self.map[original.name].update([vertex.name for vertex in neighbors])
+        except KeyError:
+            self.map[original.name] = set()
+            self.map[original.name].update([vertex.name for vertex in neighbors])
 
 
     def waypoint_navigation(self, robot):
@@ -51,13 +50,13 @@ class Swarm(object):
             robot.path = path
 
 
-    def find_path(self, node):
+    def find_path(self, vertex):
         path = []
-        while node != self.hive:
+        while vertex != self.hive:
             for k, v in self.map.items():
-                if v == node:
+                if v == vertex:
                     path.append(k)
-                    node = k
+                    vertex = k
 
         return path
 
@@ -65,9 +64,5 @@ class Swarm(object):
     def choose_waypoint(self):
         unexplored_area = [area for area in self.unknown_territory if area.state == "red"]
         if unexplored_area:
-            waypoint = unexplored_area[0]
-            for node in unexplored_area:
-                if node.weight < waypoint.weight:
-                    waypoint = node.weight
-
+            waypoint = min(unexplored_area, key = lambda vertex: vertex.weight)
             return waypoint
