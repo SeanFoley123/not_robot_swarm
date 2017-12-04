@@ -13,7 +13,6 @@ class Robot(object):
     def start(self, starting_vertex):
         self.current = starting_vertex
         self.current.weight = 0
-        self.memory.append(self.current)
 
 
     def move(self):
@@ -22,7 +21,7 @@ class Robot(object):
 
         if self.state == "normal":
             unexplored = [vertex for vertex in self.current.neighbors if vertex.state == "red"]
-            if not unexplored:              # if there is an adjacent untouched vertex
+            if not unexplored:              # if there is no adjacent untouched vertex
                 self.current.state = "green"
                 next_state = self.memory.pop()
                 if self.distance == 0:
@@ -31,17 +30,16 @@ class Robot(object):
             else:
                 self.current.state = "yellow"
                 next_state = np.random.choice(unexplored)
-                self.memory.append(next_state)
+                self.memory.append(self.current)
 
-        elif self.state == "rebalancing":
+        elif self.state == "rebalance":
             next_state = self.path.pop()
-            self.memory.append(next_state)
+            self.memory.append(self.current)
             if not self.path:
                 self.state = "normal"
 
         self.current = next_state
         self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight     
-
         yield self.current                # returning ending vertex
 
 
