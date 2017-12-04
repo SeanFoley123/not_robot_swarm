@@ -58,8 +58,7 @@ def main():
 	pygame.display.update()
 
 	while True:
-		clock.tick(1)
-		print([area for area in swarm.unknown_territory if area.state == "red"])
+		clock.tick(2)
 		if not (all([True if robot.state == "standby" else False for robot in swarm.swarm]) and (not [area for area in swarm.unknown_territory if area.state == "red"])):
 			swarm.update()
 			background.fill(background_color)
