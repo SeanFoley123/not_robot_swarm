@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from math import sqrt
 from Vertex import Vertex
-from Grid import CompleteGraph, RandomGraph
+from Grid import CompleteGraph, RandomGraph, BottleNeckGraph
 from swarm import Swarm
 from pprint import PrettyPrinter
 
@@ -44,7 +44,7 @@ def main():
 	pygame.display.set_caption('Graph Exploration')
 	clock = pygame.time.Clock()
 
-	grid = RandomGraph(20, 0)
+	grid = RandomGraph(50, 0)
 	space_out_vertices(grid)
 	swarm = Swarm(3)
 	swarm.startup_sequence(grid.list_of_vertices[0])

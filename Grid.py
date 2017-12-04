@@ -22,7 +22,7 @@ class CompleteGraph(Grid):
 class RandomGraph(Grid):
     def __init__(self, num, sparseness = .5):
         # sparseness ranges from 0 to 1, with .5 being an average graph
-        super().__init__()
+        super(RandomGraph, self).__init__()
 
         self.list_of_vertices = [Vertex(name='v'+str(i)) for i in range(num)]
         for i in range(len(self.list_of_vertices)):
@@ -55,4 +55,25 @@ class RandomGraph(Grid):
             loc1, loc2 = generate_random_connection()
             loc1.neighbors.append(loc2)
             loc2.neighbors.append(loc1)
+
+class BottleNeckGraph(Grid):
+    def __init__(self, num, sparseness = 0.5):
+        super(BottleNeckGraph, self).__init__()
+
+        side1 = RandomGraph(num/2, sparseness)
+        side2 = RandomGraph(num - num/2, sparseness)
+        print int(side1.list_of_vertices[-1].name[1::])
+
+        for i, q in enumerate(side2.list_of_vertices):
+            q.name = 'v' + str(int(q.name[1::]) + i + 1)
+
+
+        self.list_of_vertices.extend(side1.list_of_vertices)
+        self.list_of_vertices.extend(side2.list_of_vertices)
+        print self.list_of_vertices
+        self.list_of_vertices[len(side1.list_of_vertices)-1].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)])
+        self.list_of_vertices[len(side1.list_of_vertices)].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)-1])
+
+
+
 
