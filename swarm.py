@@ -21,8 +21,8 @@ class Swarm(object):
         for robot in self.swarm:
             if robot.state != "standby":
                 self.command_robot(robot)           #have the robot move around like normal
-            # else:                                 #currently broken
-            #     self.waypoint_navigation(robot)     #have the robot move to the nearest red spot
+            else:                                 #currently broken
+                self.waypoint_navigation(robot)     #have the robot move to the nearest red spot
 
 
     def command_robot(self, robot):
@@ -53,10 +53,15 @@ class Swarm(object):
     def find_path(self, vertex):
         path = []
         while vertex != self.hive:
-            for k, v in self.map.items():
-                if v == vertex:
-                    path.append(k)
-                    vertex = k
+            path.append(vertex)
+            vertex = min(vertex.neighbors, key = lambda v: v.weight)
+        # while vertex_name != self.hive:
+        #     for k, v in self.map.items():
+        #         if vertex_name in v:
+        #             print("hi", path)
+
+        #             path.append(k)
+        #             vertex_name = k
 
         return path
 
