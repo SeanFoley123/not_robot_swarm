@@ -45,16 +45,35 @@ class RandomGraph(Grid):
            else:
                return generate_random_connection()
 
+        def initialize_graph_connections():
+          vertices = copy.copy(self.list_of_vertices)
+          choice1 = np.random.choice(vertices)
+          chosen_vertices = [choice1]
+          for i in range(len(vertices)):
+            unconnected_vertex = np.random.choice(vertices)
+            connected_vertex = np.random.choice(chosen_vertices)
+            connect_vertices(unconnected_vertex, connected_vertex)
+            chosen_vertices.append(unconnected_vertex)
+            vertices.pop(find(unconnected_vertex))
+          self.list_of_vertices = chosen_vertices
+
+
+        def connect_vertices(loc1, loc2):
+           loc1.neighbors.append(loc2)
+           loc2.neighbors.append(loc1)
+
+
+
         max_connections = get_max_connections(len(self.list_of_vertices))
         # get gaussian distribution with mean skewed by sparseness
-        num_of_connections = -1
-        while (len(self.list_of_vertices) > num_of_connections or num_of_connections > max_connections):
-            num_of_connections = int(max_connections*sparseness + max_connections/6*np.random.randn())
+        num_of_connections = np.random.randint(0, max_connections - len(self.list_of_vertices) - 1)
+
+        
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
-            loc1.neighbors.append(loc2)
-            loc2.neighbors.append(loc1)
+            connect_vertices(loc1, loc2)
+
 
 class BottleNeckGraph(Grid):
     def __init__(self, num, sparseness = 0.5):

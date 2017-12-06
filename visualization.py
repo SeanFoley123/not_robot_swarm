@@ -6,7 +6,7 @@ from Vertex import Vertex
 from Grid import CompleteGraph, RandomGraph, BottleNeckGraph
 from swarm import Swarm
 from pprint import PrettyPrinter
-
+import numpy as np
 sizex = 700
 sizey = 700
 background_color = (227, 232, 239)
@@ -22,11 +22,11 @@ def space_out_vertices(grid):
 	y = 0
 
 	for vertex in grid.list_of_vertices:
-		vertex.coords = (x + margin, y + margin)
-		x += spacing
-		if x >= sizex - margin:
-			x = 0
-			y += spacing
+		vertex.coords = (np.random.randint(margin, sizex-margin), np.random.randint(margin, sizey-margin))
+		# x += spacing
+		# if x >= sizex - margin:
+		# 	x = 0
+		# 	y += spacing
 
 
 def draw_robots(background, grid, swarm):
@@ -44,7 +44,7 @@ def main():
 	pygame.display.set_caption('Graph Exploration')
 	clock = pygame.time.Clock()
 
-	grid = RandomGraph(50, 0)
+	grid = RandomGraph(20, 0)
 	space_out_vertices(grid)
 	swarm = Swarm(3)
 	swarm.startup_sequence(grid.list_of_vertices[0])
@@ -59,7 +59,7 @@ def main():
 
 	while True:
 		clock.tick(1)
-		print([area for area in swarm.unknown_territory if area.state == "red"])
+		#print([area for area in swarm.unknown_territory if area.state == "red"])
 		if not (all([True if robot.state == "standby" else False for robot in swarm.swarm]) and (not [area for area in swarm.unknown_territory if area.state == "red"])):
 			swarm.update()
 			background.fill(background_color)
