@@ -49,7 +49,7 @@ class RandomGraph(Grid):
           vertices = copy.copy(self.list_of_vertices)
           choice1 = np.random.choice(vertices)
           chosen_vertices = [choice1]
-          for i in range(len(vertices)):
+          for i in range(len(self.list_of_vertices)-1):
             unconnected_vertex = np.random.choice(vertices)
             connected_vertex = np.random.choice(chosen_vertices)
             connect_vertices(unconnected_vertex, connected_vertex)
