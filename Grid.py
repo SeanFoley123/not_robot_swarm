@@ -1,6 +1,7 @@
 from Vertex import *
 import numpy as np
 import random
+import copy as copy
 
 class Grid(object):
 
@@ -27,6 +28,7 @@ class RandomGraph(Grid):
         self.list_of_vertices = [Vertex(name='v'+str(i)) for i in range(num)]
         for i in range(len(self.list_of_vertices)):
             self.list_of_vertices[i].neighbors = []
+
         self.generate_connections(sparseness)
 
     def generate_connections(self, sparseness):
@@ -54,7 +56,7 @@ class RandomGraph(Grid):
             connected_vertex = np.random.choice(chosen_vertices)
             connect_vertices(unconnected_vertex, connected_vertex)
             chosen_vertices.append(unconnected_vertex)
-            vertices.pop(find(unconnected_vertex))
+            vertices.pop(vertices.index(unconnected_vertex))
           self.list_of_vertices = chosen_vertices
 
 
@@ -63,7 +65,7 @@ class RandomGraph(Grid):
            loc2.neighbors.append(loc1)
 
 
-
+        initialize_graph_connections()
         max_connections = get_max_connections(len(self.list_of_vertices))
         # get gaussian distribution with mean skewed by sparseness
         num_of_connections = np.random.randint(0, max_connections - len(self.list_of_vertices) - 1)
