@@ -31,11 +31,13 @@ def space_out_vertices(grid):
 
 def draw_robots(background, grid, swarm):
 	for start_vertex in grid.list_of_vertices:
+		for end_vertex in start_vertex.neighbors:
+			pygame.draw.line(background, edge_color, start_vertex.coords, end_vertex.coords)
+
+	for start_vertex in grid.list_of_vertices:
 		pygame.draw.circle(background, state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
 		if any(robot.current == start_vertex for robot in swarm.swarm):
 			pygame.draw.circle(background, robot_color, start_vertex.coords, 15, 3)
-		for end_vertex in start_vertex.neighbors:
-			pygame.draw.line(background, edge_color, start_vertex.coords, end_vertex.coords)
 
 
 
