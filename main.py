@@ -32,16 +32,15 @@ class Main(object):
 
 
 if __name__=="__main__":
-    alg = Main(10, 3)
-    for k in range(10, 110, 10):
-        times = []
-        alg.grid_size = k
-        alg.num_robots = int(k*3/10)
+    alg = Main(100, 3)
+    # for k in range(10, 110, 10):
+    times = []
+    # alg.grid_size = k
 
-        for i in range(1000):
-            times.append(alg.run())
-            alg.reset()
-            # if i%100 == 0:
-            #     print("grid_size")
-        
-        print("grid size " + str(k) + ": " + str((sum(times)/1000.0)*1000) + " ms")
+    for i in range(1000):
+        times.append(alg.run())
+        alg.reset()
+        if i%100 == 0:
+            print(i)
+
+    print str((sum(times)/1000.0)*1000) + " ms"
