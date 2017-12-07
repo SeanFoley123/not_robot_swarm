@@ -10,7 +10,7 @@ class Main(object):
 
 
     def run(self):
-        while not all([True if robot.state == "standby" else False for robot in self.swarm.swarm]):
+        while not (all([True if robot.state == "standby" else False for robot in swarm.swarm]) and (not [area for area in swarm.unknown_territory if area.state == "red"])):
             self.swarm.update()
 
         print(self.swarm.map)

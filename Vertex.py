@@ -7,7 +7,7 @@ class Vertex(object):
         self.name = name
         self.state = 'red'
         self.weight = np.inf
-        self.neighbors = []
+        self.neighbors = set()
 
     def get_name(self):
         return self.name

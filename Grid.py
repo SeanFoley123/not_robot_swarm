@@ -83,7 +83,6 @@ class BottleNeckGraph(Grid):
 
         side1 = RandomGraph(num/2, sparseness)
         side2 = RandomGraph(num - num/2, sparseness)
-        print int(side1.list_of_vertices[-1].name[1::])
 
         for i, q in enumerate(side2.list_of_vertices):
             q.name = 'v' + str(int(q.name[1::]) + i + 1)
@@ -91,10 +90,5 @@ class BottleNeckGraph(Grid):
 
         self.list_of_vertices.extend(side1.list_of_vertices)
         self.list_of_vertices.extend(side2.list_of_vertices)
-        print self.list_of_vertices
         self.list_of_vertices[len(side1.list_of_vertices)-1].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)])
         self.list_of_vertices[len(side1.list_of_vertices)].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)-1])
-
-
-
-
