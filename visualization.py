@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from math import sqrt
 from Vertex import Vertex
-from Grid import CompleteGraph, RandomGraph, BottleNeckGraph
+from Grid import CompleteGraph, RandomGraph, BottleNeckGraph, GridGraph
 from swarm import Swarm
 from pprint import PrettyPrinter
 import numpy as np
@@ -18,15 +18,16 @@ pp = PrettyPrinter()
 def space_out_vertices(grid):
 	margin = 100
 	spacing = int((sizex - 2*margin)/sqrt(len(grid.list_of_vertices)))
-	x = 0
-	y = 0
+	x = 100
+	y = 100
 
 	for vertex in grid.list_of_vertices:
-		vertex.coords = (np.random.randint(margin, sizex-margin), np.random.randint(margin, sizey-margin))
-		# x += spacing
-		# if x >= sizex - margin:
-		# 	x = 0
-		# 	y += spacing
+		# vertex.coords = (np.random.randint(margin, sizex-margin), np.random.randint(margin, sizey-margin))
+		vertex.coords = (x, y)
+		x += spacing
+		if x >= sizex - margin:
+			x = 100
+			y += spacing
 
 
 def draw_robots(background, grid, swarm):
@@ -46,7 +47,7 @@ def main():
 	pygame.display.set_caption('Graph Exploration')
 	clock = pygame.time.Clock()
 
-	grid = RandomGraph(20, 0)
+	grid = GridGraph(16)
 	space_out_vertices(grid)
 	swarm = Swarm(3)
 	swarm.startup_sequence(grid.list_of_vertices[0])

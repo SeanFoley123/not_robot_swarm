@@ -1,6 +1,7 @@
 from Vertex import *
 import numpy as np
 import random
+from math import floor, ceil, sqrt
 import copy as copy
 
 class Grid(object):
@@ -92,3 +93,24 @@ class BottleNeckGraph(Grid):
         self.list_of_vertices.extend(side2.list_of_vertices)
         self.list_of_vertices[len(side1.list_of_vertices)-1].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)])
         self.list_of_vertices[len(side1.list_of_vertices)].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)-1])
+
+
+class GridGraph(Grid):
+    def __init__(self, num):
+        super(GridGraph, self).__init__()
+        vertex_matrix = [[Vertex(name='v'+str(i+k)) for i in range(floor(sqrt(num)))] for k in range(ceil(sqrt(num)))]
+        for k in range(len(vertex_matrix)):
+            # iterate rows
+            for i in range(len(vertex_matrix[k])):
+                # iterate columns
+                current_vertex = vertex_matrix[k][i]
+                if i > 0:
+                    current_vertex.neighbors.add(vertex_matrix[k][i-1])
+                if i < len(vertex_matrix[k]) - 1:
+                    current_vertex.neighbors.add(vertex_matrix[k][i+1])
+                if k > 0:
+                    current_vertex.neighbors.add(vertex_matrix[k-1][i])
+                if k < len(vertex_matrix) - 1:
+                    current_vertex.neighbors.add(vertex_matrix[k+1][i])
+            
+            self.list_of_vertices.extend(vertex_matrix[k])
