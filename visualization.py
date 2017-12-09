@@ -46,7 +46,7 @@ def main():
 	pygame.display.set_caption('Graph Exploration')
 	clock = pygame.time.Clock()
 
-	grid = RandomGraph(20, 0)
+	grid = BottleNeckGraph(20)
 	space_out_vertices(grid)
 	swarm = Swarm(3)
 	swarm.startup_sequence(grid.list_of_vertices[0])
@@ -68,7 +68,7 @@ def main():
 			swarm.update()
 			background.fill(background_color)
 			draw_robots(background, grid, swarm)
-		
+
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				for vertex, frequency in swarm.efficiency.items():
