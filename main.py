@@ -9,13 +9,13 @@ class Main(object):
 
     def __init__(self, grid_size, num_robots):
         self.grid_size, self.num_robots = grid_size, num_robots
-        self.grid = CompleteGraph(self.grid_size)
+        self.grid = GridGraph(self.grid_size)
         self.swarm = Swarm(self.num_robots)
         self.swarm.startup_sequence(self.grid.list_of_vertices[0])
 
 
     def reset(self):
-        self.grid = CompleteGraph(self.grid_size)
+        self.grid = GridGraph(self.grid_size)
         self.swarm = Swarm(self.num_robots)
         self.swarm.startup_sequence(self.grid.list_of_vertices[0])
 
@@ -34,16 +34,16 @@ class Main(object):
 
 
 if __name__=="__main__":
-    with open("profiling4.csv", "wb") as f:
+    with open("grid_s300r1-256.csv", "wb") as f:
         writer = csv.DictWriter(f, fieldnames=["size", "timesteps"])
         alg = Main(300, 1)
         record = {}
         k = 1
         while k < 300:
-            print k
+            print "what k", k
             times = []
-            alg.reset()
             alg.num_robots = k
+            alg.reset()
 
             for i in range(500):
                 times.append(alg.run())

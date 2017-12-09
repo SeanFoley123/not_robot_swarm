@@ -47,7 +47,7 @@ def main():
 	pygame.display.set_caption('Graph Exploration')
 	clock = pygame.time.Clock()
 
-	grid = GridGraph(16)
+	grid = GridGraph(40)
 	space_out_vertices(grid)
 	swarm = Swarm(3)
 	swarm.startup_sequence(grid.list_of_vertices[0])

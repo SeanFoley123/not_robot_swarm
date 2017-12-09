@@ -71,7 +71,7 @@ class RandomGraph(Grid):
         # get gaussian distribution with mean skewed by sparseness
         num_of_connections = np.random.randint(0, max_connections - len(self.list_of_vertices) - 1)
 
-        
+
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
@@ -98,19 +98,26 @@ class BottleNeckGraph(Grid):
 class GridGraph(Grid):
     def __init__(self, num):
         super(GridGraph, self).__init__()
-        vertex_matrix = [[Vertex(name='v'+str(i+k)) for i in range(floor(sqrt(num)))] for k in range(ceil(sqrt(num)))]
+        vertex_matrix = []
+        v = 0
+        for i in range(int(floor(sqrt(num)))):
+            matrix = []
+            for k in range(int(ceil(sqrt(num)))):
+                 matrix.append(Vertex(name='v'+str(v)))
+                 v += 1
+            vertex_matrix.append(matrix)
+
         for k in range(len(vertex_matrix)):
             # iterate rows
             for i in range(len(vertex_matrix[k])):
                 # iterate columns
                 current_vertex = vertex_matrix[k][i]
                 if i > 0:
-                    current_vertex.neighbors.add(vertex_matrix[k][i-1])
+                    current_vertex.neighbors.append(vertex_matrix[k][i-1])
                 if i < len(vertex_matrix[k]) - 1:
-                    current_vertex.neighbors.add(vertex_matrix[k][i+1])
+                    current_vertex.neighbors.append(vertex_matrix[k][i+1])
                 if k > 0:
-                    current_vertex.neighbors.add(vertex_matrix[k-1][i])
+                    current_vertex.neighbors.append(vertex_matrix[k-1][i])
                 if k < len(vertex_matrix) - 1:
-                    current_vertex.neighbors.add(vertex_matrix[k+1][i])
-            
+                    current_vertex.neighbors.append(vertex_matrix[k+1][i])
             self.list_of_vertices.extend(vertex_matrix[k])
