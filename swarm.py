@@ -1,5 +1,6 @@
 
 from robot import Robot
+import time
 
 class Swarm(object):
 
@@ -29,12 +30,12 @@ class Swarm(object):
         original, neighbors, move = robot.move()
         if neighbors:
             self.unknown_territory.update(neighbors)
-        
-        try:
-            self.efficiency[move] += 1
-        except KeyError:
-            self.efficiency[move] = 1
-        
+
+        # try:
+        #     self.efficiency[move] += 1
+        # except KeyError:
+        #     self.efficiency[move] = 1
+        #
         try:
             self.map[original.name].update([vertex.name for vertex in neighbors])
         except KeyError:

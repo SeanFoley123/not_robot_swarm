@@ -69,7 +69,7 @@ def main():
 			swarm.update()
 			background.fill(background_color)
 			draw_robots(background, grid, swarm)
-		
+
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				for vertex, frequency in swarm.efficiency.items():
