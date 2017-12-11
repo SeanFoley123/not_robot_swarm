@@ -146,7 +146,7 @@ class Visualizer(object):
 
 			self.screen.blit(self.background, (0, 0))
 			pygame.display.update()
-			# img.save(self.background, str(self.imgCounter)+'.jpg')
+			#img.save(self.background, str(self.imgCounter)+'.jpg')
 			self.imgCounter+=1
 		#ow
 		self.clock.tick(len(frames[0])+1)
@@ -157,7 +157,7 @@ class Visualizer(object):
 
 		self.screen.blit(self.background, (0, 0))
 		pygame.display.update()
-		# img.save(self.background, str(self.imgCounter)+'.jpg')
+		#img.save(self.background, str(self.imgCounter)+'.jpg')
 		self.imgCounter+=1
 
 	def draw_grid(self):
