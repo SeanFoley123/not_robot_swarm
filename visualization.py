@@ -60,10 +60,11 @@ class Visualizer(object):
 
 		self.background.fill(background_color)
 		self.draw_grid()
-		self.empty_graph = cp.copy(self.background)
+		pygame.draw.circle(self.background, self.robot_color, self.swarm.hive.coords, 15, 3)
 		self.screen.blit(self.background, (0,0))
 
 		pygame.display.update()
+		sleep(1)
 
 	def on_event(self):
 		for event in pygame.event.get():
@@ -79,7 +80,6 @@ class Visualizer(object):
 			self.draw()
 
 		sleep(.25)
-		print 
 
 
 	def on_exit(self):
@@ -146,7 +146,7 @@ class Visualizer(object):
 
 			self.screen.blit(self.background, (0, 0))
 			pygame.display.update()
-			img.save(self.background, str(self.imgCounter)+'.jpg')
+			# img.save(self.background, str(self.imgCounter)+'.jpg')
 			self.imgCounter+=1
 		#ow
 		self.clock.tick(len(frames[0])+1)
@@ -157,7 +157,7 @@ class Visualizer(object):
 
 		self.screen.blit(self.background, (0, 0))
 		pygame.display.update()
-		img.save(self.background, str(self.imgCounter)+'.jpg')
+		# img.save(self.background, str(self.imgCounter)+'.jpg')
 		self.imgCounter+=1
 
 	def draw_grid(self):
@@ -167,8 +167,16 @@ class Visualizer(object):
 				pygame.draw.line(self.background, self.edge_color, start_vertex.coords, end_vertex.coords)
 
 		for start_vertex in self.grid.list_of_vertices:
-			pygame.draw.circle(self.background, self.state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
-
+			if start_vertex != self.swarm.hive:
+				pygame.draw.circle(self.background, self.state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
+			else:
+				pygame.draw.rect(self.background, self.robot_color, pygame.Rect(start_vertex.coords[0]-8, start_vertex.coords[1]-8, 16, 16))
+				pygame.draw.polygon(self.background, self.robot_color, (
+					(start_vertex.coords[0]-8, start_vertex.coords[1]-8),
+					(start_vertex.coords[0]+8, start_vertex.coords[1]-8),
+					(start_vertex.coords[0], start_vertex.coords[1]-15)
+					)
+				)
 
 
 
