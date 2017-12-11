@@ -1,5 +1,6 @@
 
 import numpy as np
+import time
 
 class Robot(object):
 
@@ -16,9 +17,8 @@ class Robot(object):
 
 
     def move(self):
-        yield self.current            #returning the starting vertex
-        yield self.current.neighbors           #returning the original neighbors
-
+        prev = self.current            #returning the starting vertex
+        neighbors = self.current.neighbors           #returning the original neighbors
         if self.state == "normal":
             unexplored = [vertex for vertex in self.current.neighbors if vertex.state == "red"]
             if not unexplored:              # if there is no adjacent untouched vertex
@@ -37,10 +37,9 @@ class Robot(object):
             self.memory.append(self.current)
             if not self.path:
                 self.state = "normal"
-
         self.current = next_state
-        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight     
-        yield self.current                # returning ending vertex
+        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight
+        return prev, neighbors, self.current                # returning ending vertex
 
 
     @property

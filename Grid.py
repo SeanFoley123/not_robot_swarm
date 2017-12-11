@@ -1,6 +1,7 @@
 from Vertex import *
 import numpy as np
 import random
+from math import floor, ceil, sqrt
 import copy as copy
 
 class Grid(object):
@@ -70,7 +71,7 @@ class RandomGraph(Grid):
         # get gaussian distribution with mean skewed by sparseness
         num_of_connections = np.random.randint(0, max_connections - len(self.list_of_vertices) - 1)
 
-        
+
 
         for i in range(num_of_connections):
             loc1, loc2 = generate_random_connection()
@@ -83,7 +84,6 @@ class BottleNeckGraph(Grid):
 
         side1 = RandomGraph(num/2, sparseness)
         side2 = RandomGraph(num - num/2, sparseness)
-        print int(side1.list_of_vertices[-1].name[1::])
 
         for i, q in enumerate(side2.list_of_vertices):
             q.name = 'v' + str(int(q.name[1::]) + i + 1)
@@ -91,10 +91,33 @@ class BottleNeckGraph(Grid):
 
         self.list_of_vertices.extend(side1.list_of_vertices)
         self.list_of_vertices.extend(side2.list_of_vertices)
-        print self.list_of_vertices
         self.list_of_vertices[len(side1.list_of_vertices)-1].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)])
         self.list_of_vertices[len(side1.list_of_vertices)].neighbors.append(self.list_of_vertices[len(side1.list_of_vertices)-1])
 
 
+class GridGraph(Grid):
+    def __init__(self, num):
+        super(GridGraph, self).__init__()
+        vertex_matrix = []
+        v = 0
+        for i in range(int(floor(sqrt(num)))):
+            matrix = []
+            for k in range(int(ceil(sqrt(num)))):
+                 matrix.append(Vertex(name='v'+str(v)))
+                 v += 1
+            vertex_matrix.append(matrix)
 
-
+        for k in range(len(vertex_matrix)):
+            # iterate rows
+            for i in range(len(vertex_matrix[k])):
+                # iterate columns
+                current_vertex = vertex_matrix[k][i]
+                if i > 0:
+                    current_vertex.neighbors.append(vertex_matrix[k][i-1])
+                if i < len(vertex_matrix[k]) - 1:
+                    current_vertex.neighbors.append(vertex_matrix[k][i+1])
+                if k > 0:
+                    current_vertex.neighbors.append(vertex_matrix[k-1][i])
+                if k < len(vertex_matrix) - 1:
+                    current_vertex.neighbors.append(vertex_matrix[k+1][i])
+            self.list_of_vertices.extend(vertex_matrix[k])

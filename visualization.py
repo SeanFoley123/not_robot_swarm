@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from math import sqrt
 from Vertex import Vertex
-from Grid import CompleteGraph, RandomGraph, BottleNeckGraph
+from Grid import CompleteGraph, RandomGraph, BottleNeckGraph, GridGraph
 from swarm import Swarm
 from pprint import PrettyPrinter
 import numpy as np
@@ -16,11 +16,26 @@ edge_color = (83, 87, 94)
 state_to_color_mapping = {'red': pygame.Color('red'), 'yellow': pygame.Color('yellow'), 'green': pygame.Color('green')}
 pp = PrettyPrinter()
 
+<<<<<<< HEAD
 
 class Point:
 	def __init__(self):
 		self.x  = 0
 		self.y = 0
+
+def space_out_vertices(grid):
+	margin = 100
+	spacing = int((sizex - 2*margin)/sqrt(len(grid.list_of_vertices)))
+	x = 100
+	y = 100
+
+	for vertex in grid.list_of_vertices:
+		# vertex.coords = (np.random.randint(margin, sizex-margin), np.random.randint(margin, sizey-margin))
+		vertex.coords = (x, y)
+		x += spacing
+		if x >= sizex - margin:
+			x = 100
+			y += spacing
 
 
 class Visualizer(object):
@@ -44,8 +59,15 @@ class Visualizer(object):
 		self.edge_color = (83, 87, 94)
 		self.state_to_color_mapping = {'red': pygame.Color('red'), 'yellow': pygame.Color('yellow'), 'green': pygame.Color('green')}
 
+<<<<<<< HEAD
 		self.screen = pygame.display.set_mode((self.sizex, self.sizey))
 		self.background = pygame.Surface((self.sizex, self.sizey))
+
+		grid = GridGraph(40)
+		space_out_vertices(grid)
+		swarm = Swarm(3)
+		swarm.startup_sequence(grid.list_of_vertices[0])
+
 
 		self.background.fill(background_color)
 		self.draw_graph()
@@ -62,7 +84,6 @@ class Visualizer(object):
 
 	def on_update(self):
 		#print([area for area in swarm.unknown_territory if area.state == "red"])
-
 
 		if not (all([True if robot.state == "standby" else False for robot in self.swarm.swarm]) and (not [area for area in self.swarm.unknown_territory if area.state == "red"])):
 			old_vertices = [robot.current.coords for robot in self.swarm.swarm]
@@ -83,7 +104,7 @@ class Visualizer(object):
 	def main(self):
 		while self._running:
 			self.on_event()
-			#self.on_update()
+			self.on_update()
 		self.on_exit()
 
 	def draw_graph(self):
@@ -170,9 +191,5 @@ class Visualizer(object):
 			pygame.display.update()
 
 
+if __name__ == '__main__': main()
 
-if __name__ == '__main__':
-	vis = Visualizer()
-	vis.main()
-
-	
