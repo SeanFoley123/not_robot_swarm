@@ -121,3 +121,19 @@ class GridGraph(Grid):
                 if k < len(vertex_matrix) - 1:
                     current_vertex.neighbors.append(vertex_matrix[k+1][i])
             self.list_of_vertices.extend(vertex_matrix[k])
+
+
+class TripleGraph(Grid):
+    def __init__(self):
+        hive = Vertex('v0')
+        arm1 = [Vertex('v' + str(i)) for i in range(1, 5)]
+        arm2 = [Vertex('v' + str(i)) for i in range(5, 12)]
+        arm3 = [Vertex('v' + str(i)) for i in range(12, 24)]
+        hive.neighbors.extend([arm1[0], arm2[0], arm3[0]])
+        for arm in [arm1, arm2, arm3]:
+            arm[0].neighbors.append(hive)
+            for i in range(len(arm) - 1):
+                arm[i].neighbors.append(arm[i+1])
+                arm[i+1].neighbors.append(arm[i])
+        self.list_of_vertices = [hive] + arm1 + arm2 + arm3
+
