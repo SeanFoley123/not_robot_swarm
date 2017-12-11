@@ -4,7 +4,7 @@ from pygame.locals import *
 import pygame.image as img
 from math import sqrt
 from Vertex import Vertex
-from Grid import CompleteGraph, RandomGraph, BottleNeckGraph, GridGraph
+from Grid import CompleteGraph, RandomGraph, BottleNeckGraph, GridGraph, TripleGraph
 from swarm import Swarm
 from time import sleep
 from pprint import PrettyPrinter
@@ -37,11 +37,12 @@ class Visualizer(object):
 		self._running = True
 		self.sizex = 700
 		self.sizey = 700
-		self.grid = GridGraph(40)
-		self.swarm = Swarm(3)
+		self.grid = TripleGraph()
+		self.swarm = Swarm(2)
 		self.swarm.startup_sequence(self.grid.list_of_vertices[0])
 		self.old_vertices = None
 		self.imgCounter = 0
+		self.font = pygame.font.SysFont('Roboto', 25)
 
 		self.background_color = (227, 232, 239)
 		self.robot_color = (83, 87, 94)
@@ -138,7 +139,8 @@ class Visualizer(object):
 		
 
 		for i in range(len(frames[0])):
-			self.clock.tick(len(frames[0])+1)		
+			self.clock.tick(len(frames[0])+1)
+			self.on_event()	
 			self.background.fill(self.background_color)
 			for k in range(len(frames)):
 				self.draw_grid()
@@ -168,7 +170,9 @@ class Visualizer(object):
 
 		for start_vertex in self.grid.list_of_vertices:
 			if start_vertex != self.swarm.hive:
+				text = self.font.render(start_vertex.name, True, self.edge_color)
 				pygame.draw.circle(self.background, self.state_to_color_mapping[start_vertex.state], start_vertex.coords, 5)
+				self.background.blit(text, (start_vertex.coords[0]-4, start_vertex.coords[1]+4))
 			else:
 				pygame.draw.rect(self.background, self.robot_color, pygame.Rect(start_vertex.coords[0]-8, start_vertex.coords[1]-8, 16, 16))
 				pygame.draw.polygon(self.background, self.robot_color, (

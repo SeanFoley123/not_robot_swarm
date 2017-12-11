@@ -31,11 +31,6 @@ class Swarm(object):
         if neighbors:
             self.unknown_territory.update(neighbors)
 
-        # try:
-        #     self.efficiency[move] += 1
-        # except KeyError:
-        #     self.efficiency[move] = 1
-        #
         try:
             self.map[original.name].update([vertex.name for vertex in neighbors])
         except KeyError:
@@ -54,15 +49,9 @@ class Swarm(object):
     def find_path(self, vertex):
         path = []
         while vertex != self.hive:
+
             path.append(vertex)
             vertex = min(vertex.neighbors, key = lambda v: v.weight)
-        # while vertex_name != self.hive:
-        #     for k, v in self.map.items():
-        #         if vertex_name in v:
-        #             print("hi", path)
-
-        #             path.append(k)
-        #             vertex_name = k
 
         return path
 
@@ -70,5 +59,5 @@ class Swarm(object):
     def choose_waypoint(self):
         unexplored_area = [area for area in self.unknown_territory if area.state == "red"]
         if unexplored_area:
-            waypoint = min(unexplored_area, key = lambda vertex: vertex.weight)
+            waypoint = min(unexplored_area, key = lambda vertex: min(vertex.neighbors, key = lambda neighbor: neighbor.weight).weight)
             return waypoint
