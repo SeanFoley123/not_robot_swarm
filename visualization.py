@@ -37,11 +37,10 @@ class Visualizer(object):
 		self._running = True
 		self.sizex = 700
 		self.sizey = 700
-		self.grid = RandomGraph(20, 0)
+		self.grid = GridGraph(40)
 		self.swarm = Swarm(3)
 		self.swarm.startup_sequence(self.grid.list_of_vertices[0])
 		self.old_vertices = None
-
 		self.imgCounter = 0
 
 		self.background_color = (227, 232, 239)
@@ -53,10 +52,10 @@ class Visualizer(object):
 		self.screen = pygame.display.set_mode((self.sizex, self.sizey))
 		self.background = pygame.Surface((self.sizex, self.sizey))
 
-		grid = GridGraph(40)
-		self.space_out_vertices(grid)
+
+		self.space_out_vertices(self.grid)
 		swarm = Swarm(3)
-		swarm.startup_sequence(grid.list_of_vertices[0])
+		swarm.startup_sequence(self.grid.list_of_vertices[0])
 
 
 		self.background.fill(background_color)
