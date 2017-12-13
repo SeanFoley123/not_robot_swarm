@@ -28,7 +28,6 @@ class Robot(object):
     def move(self):
         '''
         Logic detailing how the robot moves. Looks for last incomplete vertex to complete. 
-
         '''
         yield self.current            #returning the starting vertex
         yield self.current.neighbors           #returning the original neighbors
@@ -67,7 +66,7 @@ class Robot(object):
         #Move robot to next vertex
         self.current = next_state
         #Set Vertex distance from home
-        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight     
+        self.current.weight = self.distance if self.distance < self.current.weight else self.current.weight
         yield self.current                # returning ending vertex
 
 

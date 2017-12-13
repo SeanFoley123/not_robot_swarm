@@ -29,6 +29,11 @@ class Swarm(object):
 
 
     def update(self):
+        """
+        updates the swarm, they all move once, this is done sequentially, but can
+        be done in parallel
+        """
+
         for robot in self.swarm:
             if robot.state != "standby":
                 self.command_robot(robot)           #have the robot move around like normal
@@ -37,10 +42,15 @@ class Swarm(object):
 
 
     def command_robot(self, robot):
+        """
+        the normal movement of the robots, they make a move based on their
+        state, and then record what they see if applicable
+        """
+
         original, neighbors, move = robot.move()    #the robot moves and reports its move and what it now sees
         if neighbors:
             self.unknown_territory.update(neighbors)    #all the unexplored neighbors are added to the set
-        
+
         try:            #this try/except updates swarm's knowledge of the original vertex
             self.map[original.name].update([vertex.name for vertex in neighbors])
         except KeyError:
@@ -49,6 +59,10 @@ class Swarm(object):
 
 
     def waypoint_navigation(self, robot):
+        """
+        rebalancing - finding a new target to move to for more exploration
+        """
+
         waypoint = self.choose_waypoint()   #picks the closest unexplored vertex
         if waypoint:
             path = self.find_path(waypoint)     #calculates a path to that vertex and sends the robot on it
@@ -58,8 +72,8 @@ class Swarm(object):
 
     def find_path(self, vertex):
         """
-        Function that implements Dijkstra's algorithm; it always chooses the lower weight option until it's
-        back at the hive
+        Function that implements a variation of Dijkstra's algorithm; it always
+        chooses the lower weight option until it's back at the hive
         """
         path = []
         while vertex != self.hive:
