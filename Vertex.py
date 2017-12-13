@@ -16,15 +16,6 @@ class Vertex(object):
         self.weight = np.inf
         self.neighbors = []
 
-    # def get_name(self):
-    #     return self.name
-
-    # def get_state(self):
-    #     return self.state
-
-    # def get_weight(self):
-    #     return self.weight
-
     def set_weight(self, newWeight):
         self.weight = newWeight
 
