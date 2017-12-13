@@ -5,15 +5,11 @@ from math import floor, ceil, sqrt
 import copy as copy
 
 class Grid(object):
-	'''
-	Object meant to represent the graph that robots travel on.
-	Contains a list of vertices
-	'''
-
+    '''
+    Object meant to represent the graph that robots travel on.
+    Contains a list of vertices
+    '''
     def __init__(self):
-    	''' 
-		
-    	'''
         self.list_of_vertices = []
 
 

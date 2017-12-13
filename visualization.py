@@ -57,7 +57,7 @@ class Visualizer(object):
 		self._running = True
 
 		#Draw graph into window
-		self.background.fill(background_color)
+		self.background.fill(self.background_color)
 		self.space_out_vertices(self.grid)
 		self.draw_grid()
 		pygame.draw.circle(self.background, self.robot_color, self.swarm.hive.coords, 15, 3)
@@ -150,7 +150,7 @@ class Visualizer(object):
 		midpoint = Point()
 
 		#Check current recursion depth
-		if recurseLevel >= 3
+		if recurseLevel >= 3:
 		#If at depth three, determine and return midpoint
 			midpoint.x = (pt1.x + pt2.x)/2
 			midpoint.y = (pt1.y + pt2.y)/2
@@ -190,34 +190,33 @@ class Visualizer(object):
 			frames.append(self.getKeyFrames(0, pt1, pt2))
 		
 			#For the length of a set of frames
-			for i in range(len(frames[0])):
+		for i in range(len(frames[0])):
+			#if Pygame loop is still running
+			if self._running:
+			#Wait
+				self.clock.tick(len(frames[0])+1)
 
-				#if Pygame loop is still running
-				if self._running:
-				#Wait
-					self.clock.tick(len(frames[0])+1)
+				#Check to see if we exited the Pygame loop
+				self.on_event()	
 
-					#Check to see if we exited the Pygame loop
-					self.on_event()	
+				#Redraw blank background
+				self.background.fill(self.background_color)
 
-					#Redraw blank background
-					self.background.fill(self.background_color)
+				#For each separate robots frames draw the robot at its current frame
+				for k in range(len(frames)):
 
-					#For each separate robots frames draw the robot at its current frame
-					for k in range(len(frames)):
+					self.draw_grid()
+					pygame.draw.circle(self.background, self.robot_color, (frames[k][i].x, frames[k][i].y), 15, 3)
 
-						self.draw_grid()
-						pygame.draw.circle(self.background, self.robot_color, (frames[k][i].x, frames[k][i].y), 15, 3)
+				#Update the screen
+				self.screen.blit(self.background, (0, 0))
+				pygame.display.update()
 
-					#Update the screen
-					self.screen.blit(self.background, (0, 0))
-					pygame.display.update()
-
-					#If we want to save an animation this will be uncommented
-					#img.save(self.background, str(self.imgCounter)+'.jpg')
-					self.imgCounter+=1
-				else:
-					self.on_exit()
+				#If we want to save an animation this will be uncommented
+				#img.save(self.background, str(self.imgCounter)+'.jpg')
+				self.imgCounter+=1
+			else:
+				self.on_exit()
 
 		#Repeated code to get last frame of robot animation
 		#ow
